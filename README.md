@@ -1,6 +1,5 @@
 # SWARL
-RL Post Training and Alignment Library
-**S**equential **W**eighted **A**lignment **R**einforcement **L**earning
+**RL Post Training and Alignment Library**
 
 A lightweight library built from scratch in python and PyTorch for LLM post-training
 and RL alignment (RLHF/RLAIF, reasoning-model RL). Built strictly for text sequences and LLM RL Post training 
