@@ -1,13 +1,10 @@
 # SWARL
 RL Post Training and Alignment Library
-
-# SWARL
-
 **S**equential **W**eighted **A**lignment **R**einforcement **L**earning
 
-A from-scratch, lightweight Python + PyTorch library for LLM post-training
-and RL alignment (RLHF/RLAIF, reasoning-model RL). Built strictly for text
-sequences — not general-purpose RL for robotics or games.
+A lightweight library built from scratch in python and PyTorch for LLM post-training
+and RL alignment (RLHF/RLAIF, reasoning-model RL). Built strictly for text sequences and LLM RL Post training 
+, not general-purpose RL for robotics or games.
 
 > 🚧 Early stage. Currently implements offline DPO end-to-end; online
 > algorithms (REINFORCE, GRPO, PPO) are in active development. See
