@@ -1,7 +1,7 @@
 # SWARL
 
-A lightweight, from-scratch Python + PyTorch library for LLM post-training
-and RL alignment — RLHF/RLAIF, DPO, REINFORCE, GRPO, PPO, and reasoning-model RL.
+A RL training library for LLM post-training
+and RL alignment.
 
 Built strictly for **text sequences**, not general-purpose RL for robotics
 or games. Architecturally inspired by [verl](https://verl.readthedocs.io)'s
