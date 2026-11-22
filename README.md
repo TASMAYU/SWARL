@@ -56,9 +56,18 @@ from myrlx.trainers.offline import DPOTrainer
 trainer = DPOTrainer(model_name="Qwen/Qwen2.5-0.5B-Instruct", beta=0.1)
 records = [
     {"prompt": "...", "chosen": "...", "rejected": "..."},
-    # or load a real dataset: see data/loaders.py (in progress)
 ]
 trainer.train(records, epochs=1, batch_size=2)
+```
+
+**Full runnable demo:** [`examples/train_dpo_demo.py`](examples/train_dpo_demo.py)
+trains on real preference data (`trl-lib/ultrafeedback_binarized`) and checks
+that held-out reward accuracy rises above 0.5. See [examples/README.md](examples/README.md).
+
+## Tests
+
+```bash
+uv run pytest -q     # CPU only, tiny random models, runs in about a second
 ```
 
 ## Project structure
