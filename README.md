@@ -2,9 +2,9 @@
   <img src="assets/swarl_logo.png" alt="SWARL logo" width="300">
 </p>
 
-<h1 align="center">SWARL</h1>
 
-<p align="center"><b>RL Post-Training and Alignment Library for LLMs</b></p>
+
+<p align="center"><b>SWARL:- RL Post-Training and Alignment Library for LLMs</b></p>
 
 A RL training library for LLM post-training
 and RL alignment.
