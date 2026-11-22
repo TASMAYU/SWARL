@@ -73,4 +73,4 @@ class DPOTrainer:
                           f"loss {stats['loss']:.4f} | "
                           f"acc {stats['reward_accuracy']:.2f} | "
                           f"margin {stats['reward_margin']:.3f}")
-                step += 1
+                step +=1
