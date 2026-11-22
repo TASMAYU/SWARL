@@ -10,9 +10,7 @@ A RL training library for LLM post-training
 and RL alignment.
 
 Built strictly for **text sequences**, not general-purpose RL for robotics
-or games. Architecturally inspired by [verl](https://verl.readthedocs.io)'s
-dataflow design, scaled down deliberately for single-maintainer,
-single-GPU-first development.
+or games. 
 
 ## Algorithm status
 
