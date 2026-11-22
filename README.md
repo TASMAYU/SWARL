@@ -4,7 +4,7 @@
 
 
 
-<p align="center"><b>SWARL:- RL Post-Training and Alignment Library for LLMs</b></p>
+<p align="center"><b>SWARL :- RL Post-Training and Alignment Library for LLMs</b></p>
 
 A RL training library for LLM post-training
 and RL alignment.
