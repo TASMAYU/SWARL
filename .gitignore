@@ -9,3 +9,7 @@ wheels/
 # Virtual environments
 .venv
 venv/
+
+# Private / local-only files
+PLAN.md
+*.excalidraw

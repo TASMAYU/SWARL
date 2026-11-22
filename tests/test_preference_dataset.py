@@ -27,7 +27,7 @@ def test_max_length_truncates_ids_and_mask_together(tokenizer):
 
 @pytest.mark.xfail(
     strict=True,
-    reason="Known bug (PLAN.md §9): a prompt longer than max_length truncates away the whole "
+    reason="Known bug: a prompt longer than max_length truncates away the whole "
     "response, leaving an all-zero loss mask. Remove this xfail once truncation is fixed.",
 )
 def test_long_prompt_keeps_some_response(tokenizer):

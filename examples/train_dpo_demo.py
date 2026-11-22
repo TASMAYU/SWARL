@@ -104,7 +104,7 @@ def to_record(row: dict, tokenizer) -> dict:
 
 def fits(record: dict, tokenizer, max_length: int) -> bool:
     """Keep only pairs that fit untruncated. Long prompts would otherwise truncate away the
-    whole response (known bug, PLAN.md §9) and silently contribute nothing to training."""
+    whole response (known truncation bug) and silently contribute nothing to training."""
     n_prompt = len(tokenizer(record["prompt"], add_special_tokens=False)["input_ids"])
     for key in ("chosen", "rejected"):
         n_resp = len(tokenizer(record[key], add_special_tokens=False)["input_ids"]) + 1  # + EOS

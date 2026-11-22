@@ -24,7 +24,7 @@ class DPOTrainer:
         # updates at DPO-sized learning rates (~1e-6) are mostly rounded away
         # (~99% of weights never change), so the model barely trains.
         # Proper bf16 mixed precision (fp32 master weights + autocast) is a
-        # later improvement (PLAN.md Stage 6.5).
+        # later improvement.
         self.device = device
         self.policy = PolicyModel(model_name, device=device, dtype=dtype)
         self.ref = ReferenceManager(self.policy)  # auto clone + freeze
