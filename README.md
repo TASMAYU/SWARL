@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/swarl_logo.png" alt="SWARL logo" width="380">
+  <img src="assets/swarl_logo.png" alt="SWARL logo" width="350">
 </p>
 
 <h1 align="center">SWARL</h1>
