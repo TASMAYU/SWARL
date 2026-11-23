@@ -17,7 +17,6 @@ or games.
 | Algorithm | Status | Stage |
 |---|---|---|
 | DPO (Direct Preference Optimization) |  Stage 1 (~90%) | offline |
-| REINFORCE | ⏳ planned | online |
 | GRPO / DAPO | ⏳ planned | online |
 | PPO (clipped surrogate + GAE) | ⏳ planned | online |
 | GSPO / CISPO / SPIN / SPPO | ⏳ planned | later |
