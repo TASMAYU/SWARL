@@ -1,7 +1,7 @@
 """Tests for PromptDataset and the left-padding collate_prompt_batch (used by online RL)."""
 from __future__ import annotations
 
-from myrlx.data.prompt_dataset import PromptDataset, collate_prompt_batch
+from swarl.data.prompt_dataset import PromptDataset, collate_prompt_batch
 from tests.conftest import PAD_ID
 
 

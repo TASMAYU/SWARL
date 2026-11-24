@@ -1,5 +1,6 @@
 """
-Preference dataset for offline algorithms (DPO, DAPO).
+Preference dataset for offline pairwise algorithms (DPO and variants such as
+IPO, SimPO, ORPO). Online methods like GRPO/DAPO use PromptDataset instead.
 
 Expects records shaped like:
     {"prompt": str, "chosen": str, "rejected": str}

@@ -54,7 +54,7 @@ Requires Python ≥ 3.13.
 ## Usage
 
 ```python
-from myrlx.trainers.offline import DPOTrainer
+from swarl.trainers.offline import DPOTrainer
 
 trainer = DPOTrainer(model_name="Qwen/Qwen2.5-0.5B-Instruct", beta=0.1)
 records = [

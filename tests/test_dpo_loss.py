@@ -1,4 +1,4 @@
-"""Tests for myrlx.losses.dpo.dpo_loss against hand-computed values."""
+"""Tests for swarl.losses.dpo.dpo_loss against hand-computed values."""
 from __future__ import annotations
 
 import math
@@ -6,7 +6,7 @@ import math
 import pytest
 import torch
 
-from myrlx.losses.dpo import dpo_loss
+from swarl.losses.dpo import dpo_loss
 
 
 def _t(*vals):

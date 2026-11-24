@@ -13,8 +13,8 @@ import pytest
 import torch
 from transformers import GPT2Config, GPT2LMHeadModel
 
-from myrlx.core.models import PolicyModel, ReferenceManager
-from myrlx.trainers.offline import DPOTrainer
+from swarl.core.models import PolicyModel, ReferenceManager
+from swarl.trainers.offline import DPOTrainer
 
 VOCAB_SIZE = 64
 PAD_ID = 0

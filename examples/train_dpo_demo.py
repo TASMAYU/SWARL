@@ -35,8 +35,8 @@ from datasets import load_dataset
 # Allow running as `python examples/train_dpo_demo.py` from the repo root without installing.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from myrlx.losses.dpo import dpo_loss  # noqa: E402
-from myrlx.trainers.offline import DPOTrainer  # noqa: E402
+from swarl.losses.dpo import dpo_loss  # noqa: E402
+from swarl.trainers.offline import DPOTrainer  # noqa: E402
 
 
 def parse_args() -> argparse.Namespace:

@@ -4,7 +4,7 @@ from __future__ import annotations
 import pytest
 import torch
 
-from myrlx.data.preference_dataset import PreferenceDataset, collate_preference_batch
+from swarl.data.preference_dataset import PreferenceDataset, collate_preference_batch
 from tests.conftest import EOS_ID, PAD_ID
 
 
