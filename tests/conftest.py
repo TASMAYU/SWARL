@@ -81,5 +81,7 @@ def tiny_trainer(tiny_policy) -> DPOTrainer:
     trainer.policy = tiny_policy
     trainer.ref = ReferenceManager(tiny_policy)
     trainer.beta = 0.5
+    trainer.loss_type = "sigmoid"
+    trainer.label_smoothing = 0.0
     trainer.optimizer = torch.optim.AdamW(tiny_policy.model.parameters(), lr=1e-3)
     return trainer

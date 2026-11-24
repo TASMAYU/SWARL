@@ -19,7 +19,8 @@ from swarl.losses.dpo import dpo_loss
 
 class DPOTrainer:
     def __init__(self, model_name: str, beta: float = 0.1, lr: float = 1e-6,
-                 device: str = "cuda", dtype: torch.dtype = torch.float32):
+                 device: str = "cuda", dtype: torch.dtype = torch.float32,
+                 loss_type: str = "sigmoid", label_smoothing: float = 0.0):
         # dtype defaults to float32 on purpose: with pure-bf16 weights, AdamW
         # updates at DPO-sized learning rates (~1e-6) are mostly rounded away
         # (~99% of weights never change), so the model barely trains.
@@ -29,6 +30,8 @@ class DPOTrainer:
         self.policy = PolicyModel(model_name, device=device, dtype=dtype)
         self.ref = ReferenceManager(self.policy)  # auto clone + freeze
         self.beta = beta
+        self.loss_type = loss_type  # "sigmoid" (standard DPO), "ipo", "hinge" or "robust"
+        self.label_smoothing = label_smoothing  # assumed label-noise rate; 0 = trust every label
         self.optimizer = torch.optim.AdamW(self.policy.model.parameters(), lr=lr)
 
     def make_dataloader(self, records: list[dict], batch_size: int = 2, max_length: int = 512):
@@ -52,7 +55,8 @@ class DPOTrainer:
             ref_rejected_lp = self.ref.sum_logprobs(rejected_ids, rejected_attn, rejected_mask)
 
         loss, chosen_rewards, rejected_rewards = dpo_loss(
-            policy_chosen_lp, policy_rejected_lp, ref_chosen_lp, ref_rejected_lp, beta=self.beta
+            policy_chosen_lp, policy_rejected_lp, ref_chosen_lp, ref_rejected_lp, beta=self.beta,
+            loss_type=self.loss_type, label_smoothing=self.label_smoothing,
         )
 
         self.optimizer.zero_grad()
