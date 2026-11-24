@@ -19,15 +19,20 @@ from swarl.losses.dpo import dpo_loss
 
 class DPOTrainer:
     def __init__(self, model_name: str, beta: float = 0.1, lr: float = 1e-6,
-                 device: str = "cuda"):
+                 device: str = "cuda", dtype: torch.dtype = torch.float32):
+        # dtype defaults to float32 on purpose: with pure-bf16 weights, AdamW
+        # updates at DPO-sized learning rates (~1e-6) are mostly rounded away
+        # (~99% of weights never change), so the model barely trains.
+        # Proper bf16 mixed precision (fp32 master weights + autocast) is a
+        # later improvement.
         self.device = device
-        self.policy = PolicyModel(model_name, device=device)
+        self.policy = PolicyModel(model_name, device=device, dtype=dtype)
         self.ref = ReferenceManager(self.policy)  # auto clone + freeze
         self.beta = beta
         self.optimizer = torch.optim.AdamW(self.policy.model.parameters(), lr=lr)
 
-    def make_dataloader(self, records: list[dict], batch_size: int = 2):
-        ds = PreferenceDataset(records, self.policy.tokenizer)
+    def make_dataloader(self, records: list[dict], batch_size: int = 2, max_length: int = 512):
+        ds = PreferenceDataset(records, self.policy.tokenizer, max_length=max_length)
         collate = partial(collate_preference_batch, pad_token_id=self.policy.tokenizer.pad_token_id)
         return DataLoader(ds, batch_size=batch_size, shuffle=True, collate_fn=collate)
 
@@ -62,8 +67,9 @@ class DPOTrainer:
             "reward_margin": (chosen_rewards - rejected_rewards).mean().item(),
         }
 
-    def train(self, records: list[dict], epochs: int = 1, batch_size: int = 2, log_every: int = 1):
-        loader = self.make_dataloader(records, batch_size=batch_size)
+    def train(self, records: list[dict], epochs: int = 1, batch_size: int = 2, log_every: int = 1,
+              max_length: int = 512):
+        loader = self.make_dataloader(records, batch_size=batch_size, max_length=max_length)
         step = 0
         for epoch in range(epochs):
             for batch in loader:

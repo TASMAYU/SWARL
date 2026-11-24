@@ -37,3 +37,21 @@ def test_reference_stays_frozen_during_training(tiny_trainer):
     tiny_trainer.train(RECORDS, epochs=2, batch_size=2, log_every=100)
     after = list(tiny_trainer.ref.ref_model.parameters())
     assert all(torch.equal(a, b) for a, b in zip(after, before))
+
+
+def test_default_dtype_is_float32():
+    # Regression guard: pure-bf16 weights make AdamW updates at DPO-sized
+    # learning rates round to zero, so the trainer must default to fp32.
+    import inspect
+
+    from swarl.trainers.offline import DPOTrainer
+
+    assert inspect.signature(DPOTrainer.__init__).parameters["dtype"].default is torch.float32
+
+
+def test_max_length_is_passed_through(tiny_trainer):
+    # Regression guard: examples/train_dpo_demo.py passes max_length to both
+    # make_dataloader and train; dropping it would crash the demo.
+    loader = tiny_trainer.make_dataloader(RECORDS, batch_size=2, max_length=8)
+    assert loader.dataset.max_length == 8
+    tiny_trainer.train(RECORDS, epochs=1, batch_size=2, log_every=100, max_length=8)
