@@ -20,6 +20,34 @@ import torch.nn.functional as F
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 
+def compute_token_logprobs(model, input_ids: torch.Tensor, attention_mask: torch.Tensor) -> torch.Tensor:
+    """Per-token log-probabilities of the *actual* next tokens.
+
+    Shared by PolicyModel and ReferenceManager so both always compute
+    log-probs the exact same way (DPO compares them directly).
+
+    Shape: (batch, seq_len - 1). Position t predicts token t+1, so the
+    last logit has nothing to predict and the first token has no
+    preceding prediction -- hence the seq_len - 1.
+    """
+    out = model(input_ids=input_ids, attention_mask=attention_mask)
+    logits = out.logits[:, :-1, :]
+    targets = input_ids[:, 1:]
+    logprobs = F.log_softmax(logits, dim=-1)
+    return torch.gather(logprobs, 2, targets.unsqueeze(-1)).squeeze(-1)
+
+
+def masked_sum(token_logprobs: torch.Tensor, loss_mask: torch.Tensor) -> torch.Tensor:
+    """Sum token log-probs over the response span only (loss_mask=1 there).
+
+    loss_mask has the same shape as input_ids (1 over response tokens,
+    0 over prompt tokens) -- shift it by one position to line up with the
+    shifted log-probs.
+    """
+    mask = loss_mask[:, 1:].to(token_logprobs.dtype)
+    return (token_logprobs * mask).sum(dim=-1)
+
+
 class PolicyModel:
     """Thin wrapper around a HF CausalLM."""
 
@@ -41,12 +69,7 @@ class PolicyModel:
         last logit has nothing to predict and the first token has no
         preceding prediction -- hence the seq_len - 1.
         """
-        out = self.model(input_ids=input_ids, attention_mask=attention_mask)
-        logits = out.logits[:, :-1, :]
-        targets = input_ids[:, 1:]
-        logprobs = F.log_softmax(logits, dim=-1)
-        token_logprobs = torch.gather(logprobs, 2, targets.unsqueeze(-1)).squeeze(-1)
-        return token_logprobs
+        return compute_token_logprobs(self.model, input_ids, attention_mask)
 
     def sum_logprobs(self, input_ids: torch.Tensor, attention_mask: torch.Tensor,
                       loss_mask: torch.Tensor) -> torch.Tensor:
@@ -57,8 +80,7 @@ class PolicyModel:
         with the shifted logprobs above.
         """
         token_lp = self.logprobs(input_ids, attention_mask)
-        mask = loss_mask[:, 1:].to(token_lp.dtype)
-        return (token_lp * mask).sum(dim=-1)
+        return masked_sum(token_lp, loss_mask)
 
 
 class ReferenceManager:
@@ -73,10 +95,5 @@ class ReferenceManager:
     @torch.no_grad()
     def sum_logprobs(self, input_ids: torch.Tensor, attention_mask: torch.Tensor,
                       loss_mask: torch.Tensor) -> torch.Tensor:
-        out = self.ref_model(input_ids=input_ids, attention_mask=attention_mask)
-        logits = out.logits[:, :-1, :]
-        targets = input_ids[:, 1:]
-        logprobs = F.log_softmax(logits, dim=-1)
-        token_lp = torch.gather(logprobs, 2, targets.unsqueeze(-1)).squeeze(-1)
-        mask = loss_mask[:, 1:].to(token_lp.dtype)
-        return (token_lp * mask).sum(dim=-1)
+        token_lp = compute_token_logprobs(self.ref_model, input_ids, attention_mask)
+        return masked_sum(token_lp, loss_mask)
