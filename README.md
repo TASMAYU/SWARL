@@ -9,7 +9,7 @@
 RL training library for LLM post-training
 and RL alignment.
 
-Built strictly for **Language Models**, not general-purpose RL for robotics
+Built for **Language Models**, not general-purpose RL for robotics
 or games. 
 
 ## Algorithm status
